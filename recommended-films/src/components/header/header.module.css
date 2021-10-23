@@ -1,0 +1,21 @@
+.headerTitle {
+  display: inline;
+  height: 38px;
+
+  color: #ffffff !important;
+}
+
+.headerDivider {
+  height: 50px !important;
+
+  border-left-color: #ffffff !important;
+  border-left-width: 3px !important;
+}
+
+.headerText {
+  height: 20px;
+
+  font-size: 20px;
+  color: #ffffff !important;
+  line-height: 20px;
+}
