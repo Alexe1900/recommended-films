@@ -31,12 +31,18 @@ const Form = () => {
   const RateComponent = ({genre}) => (
       <>
         <Title level={2}>Please rate genre: {genre}</Title>
-        <Rate className={styles.formRate} defaultValue={data[genre]} character={({ index }) => customIcons[index + 1]} 
-        tooltips={desc} allowClear={false} onChange={(number) => {
-          setData(() => Object.assign({}, data, {
-            [genre]: number
-          }));
-        }} />
+        <Rate 
+          className={styles.formRate} 
+          defaultValue={data[genre]} 
+          character={({ index }) => customIcons[index + 1]}
+          tooltips={desc} 
+          allowClear={false} 
+          onChange={(number) => {
+            setData(() => Object.assign({}, data, {
+              [genre]: number
+            }));
+          }} 
+        />
       </>
     )
   ;
@@ -45,11 +51,17 @@ const Form = () => {
     {
       title: 'Type your name',
       content: (
-        <Input className={styles.nameInput} value={data['name']} size="large" placeholder="Type your name here" prefix={<UserOutlined />}
-        onChange={(e) => {
-          setData(Object.assign({}, data, {'name': e.target.value}));
-          e.target.focus({cursor: 'end'});
-        }} />
+        <Input
+          className={styles.nameInput}
+          value={data['name']}
+          size="large"
+          placeholder="Type your name here"
+          prefix={<UserOutlined />}
+          onChange={(e) => {
+            setData(Object.assign({}, data, {'name': e.target.value}));
+            e.target.focus({cursor: 'end'});
+          }}
+        />
       )
     },
     {
