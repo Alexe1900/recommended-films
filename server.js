@@ -1,30 +1,22 @@
-const ws = new require("ws");
-const wss = new ws.Server({ noServer: true });
+const websocket = new require("ws");
+const wss = new websocket.Server({ port: 1000 });
 
-const clients = new Set();
 const clientsData = new Set();
 
-http.createServer((req, res) => {
-  // в реальном проекте здесь может также быть код для обработки отличных от websoсket-запросов
-  // здесь мы работаем с каждым запросом как с веб-сокетом
-  wss.handleUpgrade(req, req.socket, Buffer.alloc(0), onSocketConnect);
-});
-
-function onSocketConnect(ws) {
-  clients.add(ws);
-
+wss.on("connection", (ws) => {
   ws.on("message", function (message) {
     const messageData = JSON.parse(message);
+    console.log(messageData);
 
     if (messageData.type == "CLIENTDATA") {
       clientsData.add({
-        client: messageData.client,
+        client: ws,
         data: messageData.data,
       });
+      ws.send("films");
+    } else {
+      ws.send("other request");
+      console.log("other request");
     }
   });
-
-  ws.on("close", function () {
-    clients.delete(ws);
-  });
-}
+});

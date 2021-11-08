@@ -8,7 +8,7 @@ import './form.css'
 const { Step } = Steps;
 const { Title } = Typography;
 
-const Form = () => {
+const Form = ({ ws }) => {
   const [data, setData] = React.useState({
     'name': '',
     'comedy': 3,
@@ -124,6 +124,11 @@ const Form = () => {
           <Button type="primary" onClick={() => {
             message.success('Your data filled!');
             console.log(data);
+            
+            ws.send(JSON.stringify({
+              type: 'CLIENTDATA',
+              data: data,
+            }));
           }
           }>
             Done
