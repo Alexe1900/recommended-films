@@ -1,31 +1,106 @@
 import { HeaderContent } from "./components/header/header";
-import { Layout, Typography } from "antd";
+import { BackTop, Layout, Typography } from "antd";
 import { Form } from "./components/form/form";
 
 import "antd/dist/antd.css";
 
 import styles from "./App.module.css";
 import React from "react";
+import { Film } from "./shared/film/film";
 
 const { Header, Content, Footer } = Layout;
 const { Title } = Typography;
 
 function App() {
   const ws = new WebSocket("ws://localhost:1000");
-  let [data, setData] = React.useState("");
+  let [data, setData] = React.useState({
+    comedy: null,
+    "sci-fi": null,
+    entertainment: null,
+    adventure: null,
+    drama: null,
+  });
 
   ws.onmessage = (e) => {
-    setData(e.data);
+    setData(JSON.parse(e.data));
+    console.log(data);
   };
+
+  const Comedies = () => (
+    <>
+      <Title>Recommended comedies:</Title>
+      {data.comedy ? (
+        data.comedy.map((film, index) => <Film data={film} key={index} />)
+      ) : (
+        <></>
+      )}
+    </>
+  );
+
+  const SciFi = () => (
+    <>
+      <Title>Recommended sci-fi films:</Title>
+      {data["sci-fi"] ? (
+        data["sci-fi"].map((film, index) => <Film data={film} key={index} />)
+      ) : (
+        <></>
+      )}
+    </>
+  );
+
+  const Entertainment = () => (
+    <>
+      <Title>Recommended entertainment films:</Title>
+      {data.entertainment ? (
+        data.entertainment.map((film, index) => (
+          <Film data={film} key={index} />
+        ))
+      ) : (
+        <></>
+      )}
+    </>
+  );
+
+  const Adventure = () => (
+    <>
+      <Title>Recommended adventure films:</Title>
+      {data.adventure ? (
+        data.adventure.map((film, index) => <Film data={film} key={index} />)
+      ) : (
+        <></>
+      )}
+    </>
+  );
+
+  const Drama = () => (
+    <>
+      <Title>Recommended dramas:</Title>
+      {data.drama ? (
+        data.drama.map((film, index) => <Film data={film} key={index} />)
+      ) : (
+        <></>
+      )}
+    </>
+  );
 
   return (
     <Layout className="layout, App">
+      <BackTop />
       <Header className={styles.header}>
         <HeaderContent />
       </Header>
       <Content style={{ padding: "50px" }}>
         <Form ws={ws} />
-        <Title>{data}</Title>
+
+        {data.comedy ? <Comedies /> : <></>}
+
+        {data["sci-fi"] ? <SciFi /> : <></>}
+
+        {data.entertainment ? <Entertainment /> : <></>}
+
+        {data.adventure ? <Adventure /> : <></>}
+
+        {data.drama ? <Drama /> : <></>}
       </Content>
       <Footer style={{ textAlign: "center" }}>
         Ant Design ©2018 Created by Ant UED
