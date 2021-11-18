@@ -6,7 +6,7 @@
   padding-top: 20px;
   margin: 0 50px 50px 0;
   width: 250px;
-  min-height: 400px;
+  min-height: 450px;
 
   border-radius: 10px;
   background-color: #24254e;
@@ -24,4 +24,20 @@
   color: #cccee4 !important;
   font-size: x-large !important;
   text-align: center;
+}
+
+.learnMoreButton {
+  margin-bottom: 20px;
+}
+
+.learnMoreButton:not(:hover) {
+  color: #cccee4 !important;
+}
+
+.learnMoreContent {
+  display: flex;
+}
+
+.filmDescripion {
+  margin-left: 20px;
 }

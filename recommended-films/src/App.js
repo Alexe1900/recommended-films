@@ -29,57 +29,47 @@ function App() {
   const Comedies = () => (
     <>
       <Title>Recommended comedies:</Title>
-      {data.comedy ? (
-        data.comedy.map((film, index) => <Film data={film} key={index} />)
-      ) : (
-        <></>
-      )}
+      {data.comedy
+        ? data.comedy.map((film, index) => <Film data={film} key={index} />)
+        : null}
     </>
   );
 
   const SciFi = () => (
     <>
       <Title>Recommended sci-fi films:</Title>
-      {data["sci-fi"] ? (
-        data["sci-fi"].map((film, index) => <Film data={film} key={index} />)
-      ) : (
-        <></>
-      )}
+      {data["sci-fi"]
+        ? data["sci-fi"].map((film, index) => <Film data={film} key={index} />)
+        : null}
     </>
   );
 
   const Entertainment = () => (
     <>
       <Title>Recommended entertainment films:</Title>
-      {data.entertainment ? (
-        data.entertainment.map((film, index) => (
-          <Film data={film} key={index} />
-        ))
-      ) : (
-        <></>
-      )}
+      {data.entertainment
+        ? data.entertainment.map((film, index) => (
+            <Film data={film} key={index} />
+          ))
+        : null}
     </>
   );
 
   const Adventure = () => (
     <>
       <Title>Recommended adventure films:</Title>
-      {data.adventure ? (
-        data.adventure.map((film, index) => <Film data={film} key={index} />)
-      ) : (
-        <></>
-      )}
+      {data.adventure
+        ? data.adventure.map((film, index) => <Film data={film} key={index} />)
+        : null}
     </>
   );
 
   const Drama = () => (
     <>
       <Title>Recommended dramas:</Title>
-      {data.drama ? (
-        data.drama.map((film, index) => <Film data={film} key={index} />)
-      ) : (
-        <></>
-      )}
+      {data.drama
+        ? data.drama.map((film, index) => <Film data={film} key={index} />)
+        : null}
     </>
   );
 
