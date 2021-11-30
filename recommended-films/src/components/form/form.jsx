@@ -113,15 +113,14 @@ const Form = ({ ws }) => {
           <Step key={item.title} title={item.title} />
         ))}
       </Steps>
-      <div className={styles.stepsContent}>{steps[current].content}</div>
       <div className={styles.stepsAction}>
         {current < steps.length - 1 && (
-          <Button type="primary" onClick={() => next()}>
+          <Button size="large" type="primary" onClick={() => next()}>
             Next
           </Button>
         )}
         {current === steps.length - 1 && (
-          <Button type="primary" onClick={() => {
+          <Button size="large" type="primary" onClick={() => {
             message.success('Your data filled!');
             console.log(data);
             
@@ -135,11 +134,12 @@ const Form = ({ ws }) => {
           </Button>
         )}
         {current > 0 && (
-          <Button style={{ margin: '0 8px' }} onClick={() => prev()}>
+          <Button size="large" style={{ margin: '0 8px' }} onClick={() => prev()}>
             Previous
           </Button>
         )}
       </div>
+      <div className={styles.stepsContent}>{steps[current].content}</div>
     </>
   );
 };

@@ -20,7 +20,7 @@ const Film = ({ data }) => {
     <div className={styles.film}>
       <img className={styles.filmImg} src={data.img} alt={data.title} />
       <Title className={styles.filmTitle}>{data.title}</Title>
-      <Button className={styles.learnMoreButton} type="ghost" onClick={showModal}>Learn more</Button>
+      <Button size="large" className={styles.learnMoreButton} type="ghost" onClick={showModal}>Learn more</Button>
       <Modal className={styles.learnMoreModal} title={data.title} visible={isModalVisible} onCancel={handleCancel} footer={null} centered>
         <div className={styles.learnMoreContent}>
           <img className={styles.filmImg} src={data.img} alt={data.title} />
