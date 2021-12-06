@@ -3,6 +3,8 @@ const axios = require("axios").default;
 const websocket = new require("ws");
 const wss = new websocket.Server({ port: 1000 });
 
+const ratings = {};
+
 wss.on("connection", (ws) => {
   ws.on("message", function (message) {
     const messageData = JSON.parse(message);
@@ -28,9 +30,15 @@ wss.on("connection", (ws) => {
                   img: `https://www.themoviedb.org/t/p/w220_and_h330_face${film.poster_path}`,
                   title: film.title,
                   description: film.overview,
+                  rating: ratings[film.id]
+                    ? ratings[film.id].reduce(
+                        (sum, rating) => sum + rating,
+                        0
+                      ) / ratings[film.id].length
+                    : "No rating",
+                  id: film.id,
                 };
               });
-              console.log({ films });
             });
         }
 
@@ -54,9 +62,15 @@ wss.on("connection", (ws) => {
                     img: `https://www.themoviedb.org/t/p/w220_and_h330_face${film.poster_path}`,
                     title: film.title,
                     description: film.overview,
+                    rating: ratings[film.id]
+                      ? ratings[film.id].reduce(
+                          (sum, rating) => sum + rating,
+                          0
+                        ) / ratings[film.id].length
+                      : "No rating",
+                    id: film.id,
                   };
                 });
-                console.log({ films });
               });
           }
         })
@@ -78,9 +92,15 @@ wss.on("connection", (ws) => {
                     img: `https://www.themoviedb.org/t/p/w220_and_h330_face${film.poster_path}`,
                     title: film.title,
                     description: film.overview,
+                    rating: ratings[film.id]
+                      ? ratings[film.id].reduce(
+                          (sum, rating) => sum + rating,
+                          0
+                        ) / ratings[film.id].length
+                      : "No rating",
+                    id: film.id,
                   };
                 });
-                console.log({ films });
               });
           }
         })
@@ -102,9 +122,15 @@ wss.on("connection", (ws) => {
                     img: `https://www.themoviedb.org/t/p/w220_and_h330_face${film.poster_path}`,
                     title: film.title,
                     description: film.overview,
+                    rating: ratings[film.id]
+                      ? ratings[film.id].reduce(
+                          (sum, rating) => sum + rating,
+                          0
+                        ) / ratings[film.id].length
+                      : "No rating",
+                    id: film.id,
                   };
                 });
-                console.log({ films });
               });
           }
         })
@@ -126,16 +152,27 @@ wss.on("connection", (ws) => {
                     img: `https://www.themoviedb.org/t/p/w220_and_h330_face${film.poster_path}`,
                     title: film.title,
                     description: film.overview,
+                    rating: ratings[film.id]
+                      ? ratings[film.id].reduce(
+                          (sum, rating) => sum + rating,
+                          0
+                        ) / ratings[film.id].length
+                      : "No rating",
+                    id: film.id,
                   };
                 });
-                console.log({ films });
               });
           }
         })
         .then(() => {
-          console.log("stringify ", JSON.stringify(films));
           ws.send(JSON.stringify(films));
         });
+    } else if (messageData.type == "NEWRATING") {
+      if (ratings[messageData.data.id]) {
+        ratings[messageData.data.id].push(messageData.data.newRating);
+      } else {
+        ratings[messageData.data.id] = [messageData.data.newRating];
+      }
     } else {
       ws.send("other request");
       console.log("other request");

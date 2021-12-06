@@ -30,7 +30,9 @@ function App() {
     <>
       <Title>Recommended comedies:</Title>
       {data.comedy
-        ? data.comedy.map((film, index) => <Film data={film} key={index} />)
+        ? data.comedy.map((film, index) => (
+            <Film data={film} key={index} ws={ws} />
+          ))
         : null}
     </>
   );
@@ -39,7 +41,9 @@ function App() {
     <>
       <Title>Recommended sci-fi films:</Title>
       {data["sci-fi"]
-        ? data["sci-fi"].map((film, index) => <Film data={film} key={index} />)
+        ? data["sci-fi"].map((film, index) => (
+            <Film data={film} key={index} ws={ws} />
+          ))
         : null}
     </>
   );
@@ -49,7 +53,7 @@ function App() {
       <Title>Recommended entertainment films:</Title>
       {data.entertainment
         ? data.entertainment.map((film, index) => (
-            <Film data={film} key={index} />
+            <Film data={film} key={index} ws={ws} />
           ))
         : null}
     </>
@@ -59,7 +63,9 @@ function App() {
     <>
       <Title>Recommended adventure films:</Title>
       {data.adventure
-        ? data.adventure.map((film, index) => <Film data={film} key={index} />)
+        ? data.adventure.map((film, index) => (
+            <Film data={film} key={index} ws={ws} />
+          ))
         : null}
     </>
   );
@@ -68,7 +74,9 @@ function App() {
     <>
       <Title>Recommended dramas:</Title>
       {data.drama
-        ? data.drama.map((film, index) => <Film data={film} key={index} />)
+        ? data.drama.map((film, index) => (
+            <Film data={film} key={index} ws={ws} />
+          ))
         : null}
     </>
   );
