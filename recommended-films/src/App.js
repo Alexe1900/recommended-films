@@ -12,7 +12,7 @@ const { Header, Content, Footer } = Layout;
 const { Title } = Typography;
 
 function App() {
-  const ws = new WebSocket("ws://localhost:1000");
+  const ws = new WebSocket("ws://rocky-savannah-28997.herokuapp.com/");
   let [data, setData] = React.useState({
     comedy: null,
     "sci-fi": null,
