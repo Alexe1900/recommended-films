@@ -2,6 +2,7 @@ const axios = require("axios").default;
 
 const websocket = new require("ws");
 const PORT = process.env.PORT || 80;
+console.log("port: ", PORT);
 const wss = websocket.Server({ port: PORT });
 
 const ratings = {};
