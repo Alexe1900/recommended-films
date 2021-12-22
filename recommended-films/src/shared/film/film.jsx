@@ -8,14 +8,11 @@ const { Title, Paragraph } = Typography;
 const Film = ({ data, ws }) => {
   let [isModalVisible, setIsModalVisible] = React.useState(false);
   let [rating, setRating] = React.useState(
-                                            data.rating === 'No rating' ?
-                                            0 :
-                                            (
-                                              localStorage.getItem(String(data.id)) ?
-                                              localStorage.getItem(String(data.id)) :
-                                              data.rating
-                                            )
-                                          );
+    localStorage.getItem(String(data.id)) ?
+    localStorage.getItem(String(data.id)) : (
+      data.rating === 'No rating' ? 0 : data.rating
+    )
+  );
 
   const showModal = () => {
     setIsModalVisible(true);
