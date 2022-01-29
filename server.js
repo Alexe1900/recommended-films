@@ -1,3 +1,8 @@
+'use strict'
+
+const add = (a, b) => a + b;
+const avg = (arr) => arr.reduce(add, 0) / arr.length;
+
 const axios = require("axios").default;
 
 const websocket = new require("ws");
@@ -7,177 +12,98 @@ const wss = new websocket.Server({ port: PORT });
 
 const ratings = {};
 
+const api = {
+  key: 'c33616c4ada296c918a35b2d9dbc7fb3',
+  url: 'https://api.themoviedb.org/3/discover/movie',
+  codes: {
+    'comedy': 35,
+    'sci-fi': 878,
+    'entertainment': '16,10751',
+    'adventure': 12,
+    'drama': 18,
+  }
+}
+
+let getEndpoint = (genre) => `${api.url}?api_key=${api.key}&with_genres=${api.codes[genre]}`;
+
+async function requestForFilms(genre) {
+  if (messageData.data[genre] > 2) {
+    let response = await axios.get(
+        getEndpoint(genre),
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+    let data = response.data.results;
+
+    return (
+      data.map((film) => {
+        const record = ratings[film.id];
+        const result = record ? avg(record) : "No rating";
+
+        return {
+          img: `https://www.themoviedb.org/t/p/w220_and_h330_face${film.poster_path}`,
+          title: film.title,
+          description: film.overview,
+          rating: result,
+          id: film.id,
+        };
+      })
+    )
+  }
+}
+
+const commands = {
+  CLIENTDATA: (ws, messageData) => {
+    const films = {};
+
+    const requests = new Promise(async (resolve) => {
+      if (messageData.data.comedy > 2) {
+        films.comedy = await requestForFilms('comedy');
+      }
+
+      resolve();
+    })
+      .then(async () => {
+        if (messageData.data["sci-fi"] > 2) {
+          films["sci-fi"] = await requestForFilms("sci-fi");
+        }
+      })
+      .then(async () => {
+        if (messageData.data.entertainment > 2) {
+          films.entertainment = await requestForFilms("entertainment");
+        }
+      })
+      .then(async () => {
+        if (messageData.data.adventure > 2) {
+          films.adventure = await requestForFilms("adventure");
+        }
+      })
+      .then(async () => {
+        if (messageData.data.drama > 2) {
+          films.drama = await requestForFilms("drama");
+        }
+      })
+      .then(() => {
+        ws.send(JSON.stringify(films));
+      });
+  },
+  NEWRATING: (ws, messageData) => {
+    if (ratings[messageData.data.id]) {
+      ratings[messageData.data.id].push(messageData.data.newRating);
+    } else {
+      ratings[messageData.data.id] = [messageData.data.newRating];
+    }
+  },
+};
+
 wss.on("connection", (ws) => {
-  ws.on("message", function (message) {
+  ws.on("message", (message) => {
     const messageData = JSON.parse(message);
 
-    if (messageData.type == "CLIENTDATA") {
-      let films = {};
-
-      const requests = new Promise(async (resolve) => {
-        if (messageData.data.comedy > 2) {
-          await axios
-            .get(
-              "https://api.themoviedb.org/3/discover/movie?api_key=c33616c4ada296c918a35b2d9dbc7fb3&with_genres=35",
-              {
-                headers: {
-                  "Content-Type": "application/json",
-                },
-              }
-            )
-            .then((response) => response.data.results)
-            .then((data) => {
-              films.comedy = data.map((film) => {
-                return {
-                  img: `https://www.themoviedb.org/t/p/w220_and_h330_face${film.poster_path}`,
-                  title: film.title,
-                  description: film.overview,
-                  rating: ratings[film.id]
-                    ? ratings[film.id].reduce(
-                        (sum, rating) => sum + rating,
-                        0
-                      ) / ratings[film.id].length
-                    : "No rating",
-                  id: film.id,
-                };
-              });
-            });
-        }
-
-        resolve();
-      })
-        .then(async () => {
-          if (messageData.data["sci-fi"] > 2) {
-            await axios
-              .get(
-                "https://api.themoviedb.org/3/discover/movie?api_key=c33616c4ada296c918a35b2d9dbc7fb3&with_genres=878",
-                {
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                }
-              )
-              .then((response) => response.data.results)
-              .then((data) => {
-                films["sci-fi"] = data.map((film) => {
-                  return {
-                    img: `https://www.themoviedb.org/t/p/w220_and_h330_face${film.poster_path}`,
-                    title: film.title,
-                    description: film.overview,
-                    rating: ratings[film.id]
-                      ? ratings[film.id].reduce(
-                          (sum, rating) => sum + rating,
-                          0
-                        ) / ratings[film.id].length
-                      : "No rating",
-                    id: film.id,
-                  };
-                });
-              });
-          }
-        })
-        .then(async () => {
-          if (messageData.data.entertainment > 2) {
-            await axios
-              .get(
-                "https://api.themoviedb.org/3/discover/movie?api_key=c33616c4ada296c918a35b2d9dbc7fb3&with_genres=16,10751",
-                {
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                }
-              )
-              .then((response) => response.data.results)
-              .then((data) => {
-                films.entertainment = data.map((film) => {
-                  return {
-                    img: `https://www.themoviedb.org/t/p/w220_and_h330_face${film.poster_path}`,
-                    title: film.title,
-                    description: film.overview,
-                    rating: ratings[film.id]
-                      ? ratings[film.id].reduce(
-                          (sum, rating) => sum + rating,
-                          0
-                        ) / ratings[film.id].length
-                      : "No rating",
-                    id: film.id,
-                  };
-                });
-              });
-          }
-        })
-        .then(async () => {
-          if (messageData.data.adventure > 2) {
-            await axios
-              .get(
-                "https://api.themoviedb.org/3/discover/movie?api_key=c33616c4ada296c918a35b2d9dbc7fb3&with_genres=12",
-                {
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                }
-              )
-              .then((response) => response.data.results)
-              .then((data) => {
-                films.adventure = data.map((film) => {
-                  return {
-                    img: `https://www.themoviedb.org/t/p/w220_and_h330_face${film.poster_path}`,
-                    title: film.title,
-                    description: film.overview,
-                    rating: ratings[film.id]
-                      ? ratings[film.id].reduce(
-                          (sum, rating) => sum + rating,
-                          0
-                        ) / ratings[film.id].length
-                      : "No rating",
-                    id: film.id,
-                  };
-                });
-              });
-          }
-        })
-        .then(async () => {
-          if (messageData.data.drama > 2) {
-            await axios
-              .get(
-                "https://api.themoviedb.org/3/discover/movie?api_key=c33616c4ada296c918a35b2d9dbc7fb3&with_genres=18",
-                {
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                }
-              )
-              .then((response) => response.data.results)
-              .then((data) => {
-                films.drama = data.map((film) => {
-                  return {
-                    img: `https://www.themoviedb.org/t/p/w220_and_h330_face${film.poster_path}`,
-                    title: film.title,
-                    description: film.overview,
-                    rating: ratings[film.id]
-                      ? ratings[film.id].reduce(
-                          (sum, rating) => sum + rating,
-                          0
-                        ) / ratings[film.id].length
-                      : "No rating",
-                    id: film.id,
-                  };
-                });
-              });
-          }
-        })
-        .then(() => {
-          ws.send(JSON.stringify(films));
-        });
-    } else if (messageData.type == "NEWRATING") {
-      if (ratings[messageData.data.id]) {
-        ratings[messageData.data.id].push(messageData.data.newRating);
-      } else {
-        ratings[messageData.data.id] = [messageData.data.newRating];
-      }
-    } else {
-      ws.send("other request");
-      console.log("other request");
-    }
+    commands[messageData.type](ws, messageData)
   });
 });
