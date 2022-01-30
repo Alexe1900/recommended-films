@@ -24,7 +24,7 @@ const api = {
   }
 }
 
-let getEndpoint = (genre) => `${api.url}?api_key=${api.key}&with_genres=${api.codes[genre]}`;
+const getEndpoint = (genre) => `${api.url}?api_key=${api.key}&with_genres=${api.codes[genre]}`;
 
 async function requestForFilms(genre) {
   if (messageData.data[genre] > 2) {
@@ -74,17 +74,17 @@ const commands = {
         }
       })
       .then(async () => {
-        if (messageData.data.entertainment > 2) {
+        if (genresRatings.entertainment > 2) {
           films.entertainment = await requestForFilms("entertainment");
         }
       })
       .then(async () => {
-        if (messageData.data.adventure > 2) {
+        if (genresRatings.adventure > 2) {
           films.adventure = await requestForFilms("adventure");
         }
       })
       .then(async () => {
-        if (messageData.data.drama > 2) {
+        if (genresRatings.drama > 2) {
           films.drama = await requestForFilms("drama");
         }
       })
@@ -97,7 +97,6 @@ const commands = {
 
     if (ratings[id]) ratings.push(newRating);
     else ratings[id] = [newRating];
-    }
   },
 };
 
