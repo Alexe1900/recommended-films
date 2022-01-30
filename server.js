@@ -15,12 +15,12 @@ const ratings = {};
 const api = {
   key: 'c33616c4ada296c918a35b2d9dbc7fb3',
   url: 'https://api.themoviedb.org/3/discover/movie',
-  codes: {
-    'comedy': 35,
+  genreCodes: {
+    comedy: 35,
     'sci-fi': 878,
-    'entertainment': '16,10751',
-    'adventure': 12,
-    'drama': 18,
+    entertainment: '16,10751',
+    adventure: 12,
+    drama: 18,
   }
 }
 
@@ -59,16 +59,17 @@ async function requestForFilms(genre) {
 const commands = {
   CLIENTDATA: (ws, messageData) => {
     const films = {};
+    const genresRatings = messageData.data;
 
     const requests = new Promise(async (resolve) => {
-      if (messageData.data.comedy > 2) {
+      if (genresRatings.comedy > 2) {
         films.comedy = await requestForFilms('comedy');
       }
 
       resolve();
     })
       .then(async () => {
-        if (messageData.data["sci-fi"] > 2) {
+        if (genresRatings["sci-fi"] > 2) {
           films["sci-fi"] = await requestForFilms("sci-fi");
         }
       })
@@ -92,10 +93,10 @@ const commands = {
       });
   },
   NEWRATING: (ws, messageData) => {
-    if (ratings[messageData.data.id]) {
-      ratings[messageData.data.id].push(messageData.data.newRating);
-    } else {
-      ratings[messageData.data.id] = [messageData.data.newRating];
+    const { id, newRating } = messageData.data;
+
+    if (ratings[id]) ratings.push(newRating);
+    else ratings[id] = [newRating];
     }
   },
 };
