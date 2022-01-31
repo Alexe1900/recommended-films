@@ -26,7 +26,7 @@ const api = {
 
 const getEndpoint = (genre) => `${api.url}?api_key=${api.key}&with_genres=${api.codes[genre]}`;
 
-async function requestForFilms(genre) {
+const requestForFilms = async (genre) => {
   if (messageData.data[genre] > 2) {
     let response = await axios.get(
         getEndpoint(genre),
