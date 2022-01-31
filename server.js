@@ -4,16 +4,25 @@ const add = (a, b) => a + b;
 const avg = (arr) => arr.reduce(add, 0) / arr.length;
 
 const axios = require("axios").default;
-const config = require("./config");
 
 const websocket = new require("ws");
-const PORT = config.port;
+const PORT = process.env.PORT || 80;
 console.log("port: ", PORT);
 const wss = new websocket.Server({ port: PORT });
 
 const ratings = {};
 
-const api = config.api;
+const api = {
+  key: 'c33616c4ada296c918a35b2d9dbc7fb3',
+  url: 'https://api.themoviedb.org/3/discover/movie',
+  genreCodes: {
+    comedy: 35,
+    'sci-fi': 878,
+    entertainment: '16,10751',
+    adventure: 12,
+    drama: 18,
+  }
+}
 
 const getEndpoint = (genre) => `${api.url}?api_key=${api.key}&with_genres=${api.codes[genre]}`;
 
