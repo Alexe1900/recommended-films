@@ -7,6 +7,7 @@ import "antd/dist/antd.css";
 import styles from "./App.module.css";
 import React from "react";
 import { Film } from "./shared/film/film";
+import { GenreBlock } from "./shared/GenreBlock/GenreBlock";
 
 const { Header, Content, Footer } = Layout;
 const { Title } = Typography;
@@ -26,60 +27,11 @@ function App() {
     console.log(data);
   };
 
-  const Comedies = () => (
-    <>
-      <Title>Recommended comedies:</Title>
-      {data.comedy
-        ? data.comedy.map((film, index) => (
-            <Film data={film} key={index} ws={ws} />
-          ))
-        : null}
-    </>
-  );
-
-  const SciFi = () => (
-    <>
-      <Title>Recommended sci-fi films:</Title>
-      {data["sci-fi"]
-        ? data["sci-fi"].map((film, index) => (
-            <Film data={film} key={index} ws={ws} />
-          ))
-        : null}
-    </>
-  );
-
-  const Entertainment = () => (
-    <>
-      <Title>Recommended entertainment films:</Title>
-      {data.entertainment
-        ? data.entertainment.map((film, index) => (
-            <Film data={film} key={index} ws={ws} />
-          ))
-        : null}
-    </>
-  );
-
-  const Adventure = () => (
-    <>
-      <Title>Recommended adventure films:</Title>
-      {data.adventure
-        ? data.adventure.map((film, index) => (
-            <Film data={film} key={index} ws={ws} />
-          ))
-        : null}
-    </>
-  );
-
-  const Drama = () => (
-    <>
-      <Title>Recommended dramas:</Title>
-      {data.drama
-        ? data.drama.map((film, index) => (
-            <Film data={film} key={index} ws={ws} />
-          ))
-        : null}
-    </>
-  );
+  const Comedies = GenreBlock('comedy', 'Recommended comedies:');
+  const SciFi = GenreBlock('sci-fi', 'Recommended sci-fi films:');
+  const Entertainment = GenreBlock('entertainment', 'Recommended entertainment films:');
+  const Adventure = GenreBlock('adventure', 'Recommended adventure films:');
+  const Drama = GenreBlock('drama', 'Recommended dramas:');
 
   return (
     <Layout className="layout, App">
